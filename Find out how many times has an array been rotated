@@ -1,0 +1,72 @@
+#include <vector>
+#include <climits>
+using namespace std;
+
+/**
+ * Class to determine the number of rotations in a sorted rotated array.
+ * 
+ * Theory:
+ * - A sorted rotated array is created by rotating a sorted array at some pivot.
+ * - The number of rotations is equal to the index of the minimum element in the array.
+ * - The task is to find the index of this minimum element using binary search.
+ * 
+ * Key Observations:
+ * - The minimum element in a sorted rotated array is the point of rotation.
+ * - If the array is not rotated, the first element is the minimum (index 0).
+ * - Binary search can efficiently locate the minimum element.
+ * 
+ * Algorithm:
+ * 1. Initialize variables:
+ *    - `ans` to store the smallest element found so far.
+ *    - `ansind` to store the index of the smallest element.
+ * 2. Use binary search:
+ *    - If the left half [s, mid] is sorted, update the minimum and search in the right half.
+ *    - Otherwise, update the minimum and search in the left half.
+ * 3. Return the index of the smallest element.
+ * 
+ * Time Complexity:
+ * - **O(log n)** in all cases, as the array is divided into halves during each iteration.
+ * 
+ * Space Complexity:
+ * - **O(1)** since no additional space is used.
+ */
+class Solution {
+public:
+    /**
+     * Function to find the number of rotations in a rotated sorted array.
+     * 
+     * @param nums: Reference to the rotated sorted array.
+     * @return The index of the minimum element, representing the number of rotations.
+     */
+    int findKRotation(vector<int> &nums) {
+        int ans = INT_MAX;       // Initialize to maximum integer value
+        int s = 0;               // Start pointer
+        int e = nums.size() - 1; // End pointer
+        int ansind = -1;         // Initialize the index of the minimum element
+        
+        // Perform binary search
+        while (s <= e) {
+            int mid = (s + e) / 2;  // Calculate the middle index
+            
+            // Case 1: Left half [s, mid] is sorted
+            if (nums[s] <= nums[mid]) {
+                // Update the minimum element and its index
+                if (nums[s] < ans) {
+                    ans = nums[s];
+                    ansind = s;
+                }
+                s = mid + 1;  // Move to the right half
+            } 
+            // Case 2: Right half [mid, e] is unsorted
+            else {
+                // Update the minimum element and its index
+                if (nums[mid] < ans) {
+                    ans = nums[mid];
+                    ansind = mid;
+                }
+                e = mid - 1;  // Move to the left half
+            }
+        }
+        return ansind;  // Return the index of the minimum element
+    }
+};
